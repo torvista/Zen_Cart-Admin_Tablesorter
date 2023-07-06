@@ -36,8 +36,9 @@ if (!empty($current_page)) {
             $class_to_remove = 'table-condensed table-striped';
             $compact_table = true;
             break;
+
         default:
-            return;
+
     }
     $scriptList_js = json_encode($scriptList); // convert php array to js array
     ?>
@@ -57,7 +58,8 @@ if (!empty($current_page)) {
         });
 
         //note: use of functions needs to be after page load
-        window.onload = function () {
+        //here the load is using an event listener instead of window.onload as otherwise it conflicts with any other window.onload
+        function tablesorterInserts() {
             //add css in head, below last css link
             $('head link[rel="stylesheet"]').last().after('<link rel="stylesheet" href="<?= $tablesorter_path . $tablesorter_theme; ?>" media="screen">');
             //add tablesorter class to table
@@ -73,7 +75,8 @@ if (!empty($current_page)) {
                     <?= $tablesorter_parameters; ?>
                 });
             });
-        };
+        }
+        window.addEventListener("load", tablesorterInserts);
         <?php if ($debug_tsl) { ?>
         console.groupEnd();
         <?php } ?>
